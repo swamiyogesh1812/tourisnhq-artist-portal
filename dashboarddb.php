@@ -3,7 +3,7 @@ include('dbconfig.php');
 
 session_start();
  
-$fb_id = $_SESSION['FBID'];
+$fb_id = $_SESSION['UID'];
 $dj_name = strip_tags(mysql_real_escape_string($_REQUEST['dj_name']));
 $fname = strip_tags(mysql_real_escape_string($_REQUEST['fname']));
 $lname = strip_tags(mysql_real_escape_string($_REQUEST['lname']));

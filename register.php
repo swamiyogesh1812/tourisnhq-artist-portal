@@ -8,16 +8,23 @@
 </head>
 <body>
     <div class="container">
-        <form class="form-signin" method="POST" action="register_process.php">
-            <h2 class="form-signin-heading">Register</h2>
-            <input type="text" class="form-control" placeholder="Full Name" name="fullname" required autofocus>
-            <input type="text" class="form-control" placeholder="Email" name="email" required>
-            <input type="text" class="form-control" placeholder="Username" name="username" required>
-            <input type="password" class="form-control" placeholder="Password" name="password" required>
-            <input type="password" class="form-control" placeholder="Confirm Password" name="confirm_password" required>
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
-            <p>Already have an account? <a href="login.php">Login here</a></p>
-        </form>
+    
+<form method="post" class="form-signin" action="register_process.php">
+        <h2 class="form-signin-heading">Register</h2>
+    <label for="fullname">Full Name:</label>
+    <input type="text" class="form-control" name="fullname" id="fullname" required>
+    
+    <label for="email">Email:</label>
+    <input type="email" class="form-control" name="email" id="email" required>
+    
+    <label for="password">Password:</label>
+    <input type="password" class="form-control" name="password" id="password" required>
+    
+    <label for="confirm_password">Confirm Password:</label>
+    <input type="password" class="form-control" name="confirm_password" id="confirm_password" required>
+    
+    <button type="submit" class="btn btn-lg btn-primary btn-block">Register</button>
+</form>
     </div>
 </body>
 </html>

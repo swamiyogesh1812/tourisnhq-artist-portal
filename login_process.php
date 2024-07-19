@@ -1,40 +1,44 @@
 <?php
 session_start();
+require 'dbconfig.php';
 
-include('dbconfig.php');
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-// Get user credentials from POST request
-$username = $_POST['username'];
-$password = $_POST['password'];
+if (isset($_POST['email']) && isset($_POST['password'])) {
+    $email = mysqli_real_escape_string($conn, $_POST['email']);
+    $password = mysqli_real_escape_string($conn, $_POST['password']);
 
-// Check if email and password are provided
-if (empty($username) || empty($password)) {
-    echo "Email and password are required!";
-    exit();
-}
+    if (!empty($email) && !empty($password)) {
+        // Query to find the user by email
+        $stmt = $conn->prepare("SELECT * FROM users WHERE Femail = ?");
+        $stmt->bind_param('s', $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-// Query to check user credentials
-$sql = "SELECT UID, Ffname FROM users WHERE Femail = ? AND password = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("ss", $username, $password);
-$stmt->execute();
-$stmt->store_result();
-
-if ($stmt->num_rows > 0) {
-    // User found
-    $stmt->bind_result($id, $name);
-    $stmt->fetch();
-    
-    // Store user info in session
-    $_SESSION['user_id'] = $id;
-    $_SESSION['user_name'] = $name;
-    
-    // Redirect to dashboard
-    header('Location: dashboard.php');
+        if ($result->num_rows > 0) {
+            // Fetch the user data
+            $user = $result->fetch_assoc();
+            
+            // Verify the password
+            if (password_verify($password, $user['password'])) {
+                // Password is correct
+                $_SESSION['UID'] = $user['UID'];
+                $_SESSION['FULLNAME'] = $user['Ffname'];
+                $_SESSION['EMAIL'] = $user['Femail'];
+                header('Location: dashboard.php');
+                exit();
+            } else {
+                echo "Invalid email or password!";
+            }
+        } else {
+            echo "Invalid email or password!";
+        }
+    } else {
+        echo "Please fill in both fields.";
+    }
 } else {
-    echo "Invalid email or password!";
+    echo "Please fill in both fields.";
 }
-
-$stmt->close();
-$conn->close();
 ?>

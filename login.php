@@ -1,6 +1,3 @@
-<?php
-session_start();
-?>
 <!doctype html>
 <html>
 <head>
@@ -11,13 +8,18 @@ session_start();
 </head>
 <body>
     <div class="container">
-        <form class="form-signin" method="POST" action="login_process.php">
-            <h2 class="form-signin-heading">Please sign in</h2>
-            <input type="text" class="form-control" placeholder="Username" name="username" required autofocus>
-            <input type="password" class="form-control" placeholder="Password" name="password" required>
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-            <p>Don't have an account? <a href="register.php">Register here</a></p>
-        </form>
+<form method="post" class="form-signin" action="login_process.php">
+    <label for="email">Email:</label>
+    <input type="email" class="form-control" name="email" id="email" required>
+    
+    <label for="password">Password:</label>
+    <input type="password" class="form-control" name="password" id="password" required>
+    
+    <button type="submit" class="btn btn-lg btn-primary btn-block">Login</button>
+    <p>Don't have an account? <a href="register.php">Register here</a></p>
+</form>
+
+
     </div>
 </body>
 </html>

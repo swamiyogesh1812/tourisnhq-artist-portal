@@ -1,28 +1,24 @@
 <?php
 session_start();
+require 'dbconfig.php';
 
-include('dbconfig.php');
-
-if(isset($_SESSION['FBID']))
-{
-    header('Location:index.php');
-}
-// else {
-//     $user_id = $_SESSION['FBID'];
+if (!isset($_SESSION['UID'])) {
+    header('Location: index.php');
+    exit();
+} else {
+    $user_id = $_SESSION['UID'];
     
-//      $query = mysql_query("select * from artists where fb_id = '$user_id' and directory = '1'");
-//      $num = mysql_num_rows($query);
-//     if($num > 0)
-//     {
-//     if(!isset($_REQUEST['edit']))
-//     {
-//     header('Location:confirmation.php?id='.$user_id);
-//     }
-//     } 
-// }
-$upload_path = "uploads/";				
-$user_id= '122106473678194399';
-$thumb_width = "150";						
+    $query = mysqli_query($conn, "SELECT * FROM artists WHERE fb_id = '$user_id' AND directory = '1'");
+    $num = mysqli_num_rows($query);
+    if ($num > 0) {
+        if (!isset($_REQUEST['edit'])) {
+            header('Location: confirmation.php?id=' . $user_id);
+        }
+    } 
+}
+
+$upload_path = "uploads/";
+$thumb_width = "150";
 $thumb_height = "150";
 ?>
 <html lang="en">
@@ -199,7 +195,7 @@ $track = '';
            {
                
   $row = mysqli_fetch_array($query);
-$fb_id = '122106473678194399';
+  $_SESSION['UID'];
 $dj_name = $row['dj_name'];
 $fname = $row['fname'];
 $lname = $row['lname'];
