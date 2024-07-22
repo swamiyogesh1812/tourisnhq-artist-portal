@@ -2,38 +2,37 @@
 include('dbconfig.php');
 
 session_start();
- 
-$fb_id = $_SESSION['UID'];
-$dj_name = strip_tags(mysql_real_escape_string($_REQUEST['dj_name']));
-$fname = strip_tags(mysql_real_escape_string($_REQUEST['fname']));
-$lname = strip_tags(mysql_real_escape_string($_REQUEST['lname']));
-$profile_pic  = 'images.jpg';
-$artist_bio = strip_tags(mysql_real_escape_string($_REQUEST['artist_bio']));
-$dj_page_id = strip_tags(mysql_real_escape_string($_REQUEST['dj_fb_page']));
-$soundcloud = strip_tags(mysql_real_escape_string($_REQUEST['soundcloud']));
-$instagram = strip_tags(mysql_real_escape_string($_REQUEST['instagram']));
-$prior_trip = strip_tags(mysql_real_escape_string($_REQUEST['prior_trip']));
-$largest_gig = strip_tags(mysql_real_escape_string($_REQUEST['largest_gig']));
-$priorities = strip_tags(mysql_real_escape_string($_REQUEST['priorities']));
-$perform_in_nz = strip_tags(mysql_real_escape_string($_REQUEST['perform_in_nz']));
-$promoter = strip_tags(mysql_real_escape_string($_REQUEST['promoter']));
-$fb_page = strip_tags(mysql_real_escape_string($_REQUEST['fb_page']));
-$phone = strip_tags(mysql_real_escape_string($_REQUEST['phone']));
-$email = strip_tags(mysql_real_escape_string($_REQUEST['email']));
-$criminal_convictions = strip_tags(mysql_real_escape_string($_REQUEST['criminal_convictions']));
-$specialize = strip_tags(mysql_real_escape_string($_REQUEST['specialize']));
-$track = strip_tags(mysql_real_escape_string($_REQUEST['track']));
-if($_FILES["profile_pic"]["tmp_name"] != '')
-{
-$target_dir = "uploads/";
-$target_file = $target_dir . basename($_FILES["profile_pic"]["name"]);
-move_uploaded_file($_FILES["profile_pic"]["tmp_name"], $target_file);
-$profile_pic = $_FILES["profile_pic"]["name"];
 
+$fb_id = $_SESSION['UID'];
+$dj_name = isset($_REQUEST['dj_name']) ? strip_tags(mysqli_real_escape_string($conn, $_REQUEST['dj_name'])) : '';
+$fname = isset($_REQUEST['fname']) ? strip_tags(mysqli_real_escape_string($conn, $_REQUEST['fname'])) : '';
+$lname = isset($_REQUEST['lname']) ? strip_tags(mysqli_real_escape_string($conn, $_REQUEST['lname'])) : '';
+$profile_pic = 'images.jpg';
+$artist_bio = isset($_REQUEST['artist_bio']) ? strip_tags(mysqli_real_escape_string($conn, $_REQUEST['artist_bio'])) : '';
+$dj_page_id = isset($_REQUEST['dj_fb_page']) ? strip_tags(mysqli_real_escape_string($conn, $_REQUEST['dj_fb_page'])) : '';
+$soundcloud = isset($_REQUEST['soundcloud']) ? strip_tags(mysqli_real_escape_string($conn, $_REQUEST['soundcloud'])) : '';
+$instagram = isset($_REQUEST['instagram']) ? strip_tags(mysqli_real_escape_string($conn, $_REQUEST['instagram'])) : '';
+$prior_trip = isset($_REQUEST['prior_trip']) ? strip_tags(mysqli_real_escape_string($conn, $_REQUEST['prior_trip'])) : '';
+$largest_gig = isset($_REQUEST['largest_gig']) ? strip_tags(mysqli_real_escape_string($conn, $_REQUEST['largest_gig'])) : '';
+$priorities = isset($_REQUEST['priorities']) ? strip_tags(mysqli_real_escape_string($conn, $_REQUEST['priorities'])) : '';
+$perform_in_nz = isset($_REQUEST['perform_in_nz']) ? strip_tags(mysqli_real_escape_string($conn, $_REQUEST['perform_in_nz'])) : '';
+$promoter = isset($_REQUEST['promoter']) ? strip_tags(mysqli_real_escape_string($conn, $_REQUEST['promoter'])) : '';
+$fb_page = isset($_REQUEST['fb_page']) ? strip_tags(mysqli_real_escape_string($conn, $_REQUEST['fb_page'])) : '';
+$phone = isset($_REQUEST['phone']) ? strip_tags(mysqli_real_escape_string($conn, $_REQUEST['phone'])) : '';
+$email = isset($_REQUEST['email']) ? strip_tags(mysqli_real_escape_string($conn, $_REQUEST['email'])) : '';
+$criminal_convictions = isset($_REQUEST['criminal_convictions']) ? strip_tags(mysqli_real_escape_string($conn, $_REQUEST['criminal_convictions'])) : '';
+$specialize = isset($_REQUEST['specialize']) ? strip_tags(mysqli_real_escape_string($conn, $_REQUEST['specialize'])) : '';
+$track = isset($_REQUEST['track']) ? strip_tags(mysqli_real_escape_string($conn, $_REQUEST['track'])) : '';
+
+if (isset($_FILES["profile_pic"]) && $_FILES["profile_pic"]["tmp_name"] != '') {
+    $target_dir = "uploads/";
+    $target_file = $target_dir . basename($_FILES["profile_pic"]["name"]);
+    move_uploaded_file($_FILES["profile_pic"]["tmp_name"], $target_file);
+    $profile_pic = $_FILES["profile_pic"]["name"];
+} else {
+    $profile_pic = isset($_REQUEST['hidden_image']) ? strip_tags($_REQUEST['hidden_image']) : 'images.jpg';
 }
-else {
- $profile_pic  = strip_tags($_REQUEST['hidden_image']);   
-}
+
 //$query_select = mysql_query("select * from artists where fb_id = '$fb_id' and directory = '1'");
 //if(mysql_num_rows($query_select) > 0)
 //{
@@ -49,39 +48,52 @@ else {
 //$query = mysql_query("insert into artists(`id`, `fb_id`, `dj_name`, `fname`, `lname`, `profile_pic`, `soundcloud`, `instagram`, `prior_trip`, `largest_gig`, `priorities`, `perform_in_nz`, `is_promoter`, `artists_bio`, `dj_fb_page`, `event_id`, `fb_page`, `phone`, `email`, `email_status`, `approved`, `sequence_num`,`directory`,criminal_convictions,specialize,track) values('','$fb_id','$dj_name','$fname','$lname','$profile_pic','$soundcloud','$instagram','$prior_trip','$largest_gig','$priorities','$perform_in_nz','$promoter','$artist_bio','$dj_page_id','','$fb_page','$phone','$email','0','0','$seq','1','$criminal_convictions','$specialize','$track')");
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-if($_REQUEST['step'] == '1')
-{
- $query_select = mysql_query("select * from artists where fb_id = '$fb_id' and directory = '1'");
- 
-if(mysql_num_rows($query_select) > 0)
-{
-    mysql_query("update artists set dj_name='$dj_name',fname='$fname',lname='$lname',phone='$phone',email='$email' where fb_id='$fb_id' and directory='1'");
-} else {
-    $query_select_cnt = mysql_query("select * from artists where directory = '1'");
-    $num = mysql_num_rows($query_select_cnt);
-    $seq = $num+1;
-    // $query = mysql_query("insert into artists(`id`, `fb_id`, `dj_name`, `fname`, `lname`, `phone`, `email`, `sequence_num`,`directory`) values('','$fb_id','$dj_name','$fname','$lname','$phone','$email','$seq','1')");  
-    $query = mysql_query("INSERT INTO artists (fb_id, dj_name, fname, lname, phone, email, sequence_num,directory) VALUES ('$fb_id','$dj_name','$fname','$lname','$phone','$email','$seq','1')");      
-}   
+if ($_REQUEST['step'] == '1') {
+    $query_select = mysqli_query($conn, "SELECT * FROM artists WHERE fb_id = '$fb_id' AND directory = '1'");
+    
+    if (mysqli_num_rows($query_select) > 0) {
+        mysqli_query($conn, "UPDATE artists SET dj_name='$dj_name', fname='$fname', lname='$lname', phone='$phone', email='$email' WHERE fb_id='$fb_id' AND directory='1'");
+    } else {
+        $query_select_cnt = mysqli_query($conn, "SELECT * FROM artists WHERE directory = '1'");
+        $num = mysqli_num_rows($query_select_cnt);
+        $seq = $num + 1;
+        mysqli_query($conn, "INSERT INTO artists (fb_id, dj_name, fname, lname, phone, email, sequence_num, directory) VALUES ('$fb_id', '$dj_name', '$fname', '$lname', '$phone', '$email', '$seq', '1')");
+    }
+}
 
+if ($_REQUEST['step'] == '2') {
+    mysqli_query($conn, "UPDATE artists SET profile_pic='$profile_pic', artists_bio='$artist_bio' WHERE fb_id='$fb_id' AND directory='1'");
 }
-if($_REQUEST['step'] == '2')
-{
-  mysql_query("update artists set profile_pic='$profile_pic',artists_bio='$artist_bio' where fb_id='$fb_id' and directory='1'");  
-}
-if($_REQUEST['step'] == '3')
-{
- mysql_query("update artists set soundcloud='$soundcloud',instagram='$instagram',dj_fb_page='$dj_page_id',fb_page='$fb_page',prior_trip='$prior_trip' where fb_id='$fb_id' and directory='1'");    
+
+if ($_REQUEST['step'] == '3') {
+    mysqli_query($conn, "UPDATE artists SET soundcloud='$soundcloud', instagram='$instagram', dj_fb_page='$dj_page_id', fb_page='$fb_page', prior_trip='$prior_trip' WHERE fb_id='$fb_id' AND directory='1'");
 }
 if($_REQUEST['step'] == '4')
 {
- mysql_query("update artists set priorities='$priorities',criminal_convictions='$criminal_convictions',perform_in_nz='$perform_in_nz',is_promoter='$promoter',specialize='$specialize',track='$track' where fb_id='$fb_id' and directory='1'");
- $query_get = mysql_query("select * from artists where fb_id='$fb_id' and directory='1'");
- $row_get = mysql_fetch_array($query_get);
- $email = $row_get['email'];
- $name = $row_get['fname'];
- mysql_query("update Users set profile_complete='1' where Fuid = '$fb_id'");
-$arr = array('fb_id'=>$fb_id);
+    $sql_update = "UPDATE artists 
+    SET priorities='$priorities', criminal_convictions='$criminal_convictions', perform_in_nz='$perform_in_nz', is_promoter='$promoter', specialize='$specialize', track='$track' 
+    WHERE fb_id='$fb_id' AND directory='1'";
+$conn->query($sql_update);
+
+// Retrieve the updated artist information
+$sql_select = "SELECT * FROM artists WHERE fb_id='$fb_id' AND directory='1'";
+$result = $conn->query($sql_select);
+
+if ($result && $result->num_rows > 0) {
+$row_get = $result->fetch_assoc();
+$email = $row_get['email'];
+$name = $row_get['fname'];
+
+// Update the Users table
+$sql_update_users = "UPDATE Users SET profile_complete='1' WHERE Fuid='$fb_id'";
+$conn->query($sql_update_users);
+} else {
+// Handle the case where no results are returned
+$email = '';
+$name = '';
+}
+
+$arr = array('fb_id' => $fb_id);
 echo json_encode($arr);
 exit;
 // Temporarily exiting here...22-03-2024

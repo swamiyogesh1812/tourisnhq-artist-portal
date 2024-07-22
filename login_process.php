@@ -27,7 +27,7 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
                 $_SESSION['UID'] = $user['UID'];
                 $_SESSION['FULLNAME'] = $user['Ffname'];
                 $_SESSION['EMAIL'] = $user['Femail'];
-                header('Location: dashboard.php');
+                header('Location: dashboard.php?Fuid=' . $fuid);
                 exit();
             } else {
                 echo "Invalid email or password!";
